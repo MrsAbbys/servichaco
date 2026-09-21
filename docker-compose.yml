@@ -1,0 +1,48 @@
+services:
+  # Base de Datos Relacional con extensión pgvector para el pipeline RAG
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: servichaco_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - servichaco_pgdata:/var/lib/postgresql/data
+    networks:
+      - servichaco_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # In-Memory Cache y Pub/Sub para WebSockets de Movilidad
+  redis:
+    image: redis:7-alpine
+    container_name: servichaco_redis
+    restart: always
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - servichaco_redisdata:/data
+    networks:
+      - servichaco_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  servichaco_pgdata:
+    driver: local
+  servichaco_redisdata:
+    driver: local
+
+networks:
+  servichaco_network:
+    driver: bridge
