@@ -53,3 +53,32 @@ export const createReport = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Error interno al guardar reporte' });
   }
 };
+
+export const updateReportStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ['pendiente', 'en_revision', 'resuelto'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'Estado no válido' });
+    }
+
+    const queryText = `
+      UPDATE citizen_reports 
+      SET status = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+      RETURNING id, title, category, status, updated_at
+    `;
+    const { rows } = await pool.query(queryText, [status, id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Reporte no encontrado' });
+    }
+
+    return res.status(200).json({ success: true, data: rows[0] });
+  } catch (error) {
+    console.error('❌ Error al actualizar reporte:', error.message);
+    return res.status(500).json({ success: false, message: 'Error interno al actualizar estado' });
+  }
+};

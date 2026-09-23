@@ -7,6 +7,7 @@ import MobilityView from './pages/visitor/MobilityView';
 import AssistantView from './pages/visitor/AssistantView';
 import CommerceView from './pages/visitor/CommerceView';
 import ReportsView from './pages/visitor/ReportsView';
+import AdminReportsDashboard from './pages/visitor/AdminReportsDashboard';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="asistente" element={<AssistantView />} />
           <Route path="comercio" element={<CommerceView />} />
           <Route path="reportes" element={<ReportsView />} />
+          <Route path="admin/reportes" element={<AdminReportsDashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>

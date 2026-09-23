@@ -93,3 +93,18 @@ export const submitCitizenReport = async (reportData) => {
     return { success: false, message: error.message };
   }
 };
+
+export const updateReportStatus = async (id, status) => {
+  try {
+    const res = await fetch(`${API_URL}/reports/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Error al actualizar estado:', error);
+    return { success: false };
+  }
+};
