@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { getPublicServices } from '../controllers/servicesController.js';
+import { getPublicServices, getBusinessesDirectory } from '../controllers/servicesController.js';
 
 const router = Router();
 
-// Ruta pública accesible en modo visitante
 router.get('/public', getPublicServices);
+router.get('/directory', getBusinessesDirectory);
 
 export default router;

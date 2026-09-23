@@ -46,3 +46,19 @@ export const sendChatMessage = async (message) => {
     };
   }
 };
+
+export const fetchBusinessesDirectory = async (category = '', search = '') => {
+  try {
+    let url = `${API_URL}/services/directory?`;
+    if (category) url += `category=${category}&`;
+    if (search) url += `search=${encodeURIComponent(search)}&`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Error al consultar directorio comercial');
+    const data = await res.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Directory API Error:', error);
+    return [];
+  }
+};

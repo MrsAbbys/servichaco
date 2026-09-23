@@ -5,6 +5,7 @@ import Home from './pages/visitor/Home';
 import Services247 from './pages/visitor/Services247';
 import MobilityView from './pages/visitor/MobilityView';
 import AssistantView from './pages/visitor/AssistantView';
+import CommerceView from './pages/visitor/CommerceView';
 
 function PlaceholderView({ title }) {
   return (
@@ -24,7 +25,7 @@ export default function App() {
           <Route path="servicios-24-7" element={<Services247 />} />
           <Route path="movilidad" element={<MobilityView />} />
           <Route path="asistente" element={<AssistantView />} />
-          <Route path="comercio" element={<PlaceholderView title="Directorio Comercial y Emprendedores" />} />
+          <Route path="comercio" element={<CommerceView />} />
           <Route path="reportes" element={<PlaceholderView title="Gestión de Reportes Ciudadanos" />} />
         </Route>
       </Routes>
