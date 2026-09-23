@@ -27,3 +27,22 @@ export const fetchMobilityRoutes = async () => {
     return [];
   }
 };
+
+export const sendChatMessage = async (message) => {
+  try {
+    const res = await fetch('http://localhost:5000/api/v1/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+    if (!res.ok) throw new Error('Error al consultar el asistente');
+    const data = await res.json();
+    return data.data;
+  } catch (error) {
+    console.error('Chat API Error:', error);
+    return {
+      agent: 'Error',
+      reply: 'No se pudo comunicar con los servicios de ServiChaco en este momento.'
+    };
+  }
+};

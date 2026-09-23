@@ -4,6 +4,7 @@ import VisitorLayout from './components/layout/VisitorLayout';
 import Home from './pages/visitor/Home';
 import Services247 from './pages/visitor/Services247';
 import MobilityView from './pages/visitor/MobilityView';
+import AssistantView from './pages/visitor/AssistantView';
 
 function PlaceholderView({ title }) {
   return (
@@ -22,9 +23,9 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="servicios-24-7" element={<Services247 />} />
           <Route path="movilidad" element={<MobilityView />} />
+          <Route path="asistente" element={<AssistantView />} />
           <Route path="comercio" element={<PlaceholderView title="Directorio Comercial y Emprendedores" />} />
           <Route path="reportes" element={<PlaceholderView title="Gestión de Reportes Ciudadanos" />} />
-          <Route path="asistente" element={<PlaceholderView title="Asistente RAG Multi-Agente" />} />
         </Route>
       </Routes>
     </BrowserRouter>
