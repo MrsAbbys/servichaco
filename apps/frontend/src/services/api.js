@@ -62,3 +62,34 @@ export const fetchBusinessesDirectory = async (category = '', search = '') => {
     return [];
   }
 };
+
+export const fetchCitizenReports = async (category = '') => {
+  try {
+    let url = `${API_URL}/reports?`;
+    if (category) url += `category=${category}`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Error al consultar reportes');
+    const data = await res.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Reports API Error:', error);
+    return [];
+  }
+};
+
+export const submitCitizenReport = async (reportData) => {
+  try {
+    const res = await fetch(`${API_URL}/reports`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reportData)
+    });
+    if (!res.ok) throw new Error('Error al registrar reporte');
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Submit Report Error:', error);
+    return { success: false, message: error.message };
+  }
+};

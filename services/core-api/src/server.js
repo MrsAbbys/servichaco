@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import servicesRoutes from './routes/servicesRoutes.js';
+import reportsRoutes from './routes/reportsRoutes.js';
 
 dotenv.config();
 
@@ -11,10 +12,11 @@ const PORT = process.env.CORE_API_PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-// Endpoints del Core
+// Endpoints
 app.use('/api/v1/services', servicesRoutes);
+app.use('/api/v1/reports', reportsRoutes);
 
-// Health check para Docker y monitoreo
+// Health check
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'healthy', 

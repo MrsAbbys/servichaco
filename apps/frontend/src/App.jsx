@@ -6,15 +6,7 @@ import Services247 from './pages/visitor/Services247';
 import MobilityView from './pages/visitor/MobilityView';
 import AssistantView from './pages/visitor/AssistantView';
 import CommerceView from './pages/visitor/CommerceView';
-
-function PlaceholderView({ title }) {
-  return (
-    <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
-      <h2 className="text-xl font-bold text-slate-800">{title}</h2>
-      <p className="text-slate-500 text-sm mt-2">Módulo en preparación para sincronización con la API.</p>
-    </div>
-  );
-}
+import ReportsView from './pages/visitor/ReportsView';
 
 export default function App() {
   return (
@@ -26,7 +18,7 @@ export default function App() {
           <Route path="movilidad" element={<MobilityView />} />
           <Route path="asistente" element={<AssistantView />} />
           <Route path="comercio" element={<CommerceView />} />
-          <Route path="reportes" element={<PlaceholderView title="Gestión de Reportes Ciudadanos" />} />
+          <Route path="reportes" element={<ReportsView />} />
         </Route>
       </Routes>
     </BrowserRouter>
