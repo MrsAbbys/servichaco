@@ -20,7 +20,7 @@ __pycache__/
 dist/
 build/
 
-# Datos persistentes locales
+# Datos persistentes de bases de datos
 pgdata/
 redisdata/
 
