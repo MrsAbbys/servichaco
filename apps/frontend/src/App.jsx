@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import VisitorLayout from './components/layout/VisitorLayout';
 import Home from './pages/visitor/Home';
 import Services247 from './pages/visitor/Services247';
+import MobilityView from './pages/visitor/MobilityView';
 
 function PlaceholderView({ title }) {
   return (
@@ -20,8 +21,8 @@ export default function App() {
         <Route path="/" element={<VisitorLayout />}>
           <Route index element={<Home />} />
           <Route path="servicios-24-7" element={<Services247 />} />
+          <Route path="movilidad" element={<MobilityView />} />
           <Route path="comercio" element={<PlaceholderView title="Directorio Comercial y Emprendedores" />} />
-          <Route path="movilidad" element={<PlaceholderView title="Yacuiba Móvil - Seguimiento de Rutas" />} />
           <Route path="reportes" element={<PlaceholderView title="Gestión de Reportes Ciudadanos" />} />
           <Route path="asistente" element={<PlaceholderView title="Asistente RAG Multi-Agente" />} />
         </Route>

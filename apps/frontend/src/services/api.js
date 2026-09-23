@@ -15,3 +15,15 @@ export const fetchPublicServices = async (category = '', is247 = false) => {
     return [];
   }
 };
+
+export const fetchMobilityRoutes = async () => {
+  try {
+    const res = await fetch('http://localhost:4001/api/v1/mobility/routes');
+    if (!res.ok) throw new Error('Error al consultar rutas de movilidad');
+    const data = await res.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Mobility API Error:', error);
+    return [];
+  }
+};
