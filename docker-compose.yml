@@ -1,48 +1,108 @@
 services:
-  # Base de Datos Relacional con extensión pgvector para el pipeline RAG
   postgres:
     image: pgvector/pgvector:pg16
     container_name: servichaco_postgres
-    restart: always
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DB: servichaco_db
+      POSTGRES_USER: servichaco_admin
+      POSTGRES_PASSWORD: servichaco_secret_2026
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     volumes:
-      - servichaco_pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
-      - servichaco_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - servichaco-net
 
-  # In-Memory Cache y Pub/Sub para WebSockets de Movilidad
   redis:
     image: redis:7-alpine
     container_name: servichaco_redis
-    restart: always
     ports:
-      - "${REDIS_PORT}:6379"
-    volumes:
-      - servichaco_redisdata:/data
+      - "6379:6379"
     networks:
-      - servichaco_network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - servichaco-net
+
+  core-api:
+    build:
+      context: ./services/core-api
+    container_name: servichaco_core_api
+    environment:
+      CORE_API_PORT: 4000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: servichaco_db
+      DB_USER: servichaco_admin
+      DB_PASSWORD: servichaco_secret_2026
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    networks:
+      - servichaco-net
+
+  mobility:
+    build:
+      context: ./services/mobility
+    container_name: servichaco_mobility
+    environment:
+      MOBILITY_PORT: 4001
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "4001:4001"
+    depends_on:
+      - redis
+    networks:
+      - servichaco-net
+
+  rag-engine:
+    build:
+      context: ./services/rag-engine
+    container_name: servichaco_rag_engine
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: servichaco_db
+      DB_USER: servichaco_admin
+      DB_PASSWORD: servichaco_secret_2026
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - servichaco-net
+
+  orchestrator:
+    build:
+      context: ./services/agent-orchestrator
+    container_name: servichaco_orchestrator
+    environment:
+      AGENT_ORCHESTRATOR_PORT: 5000
+      CORE_API_URL: http://core-api:4000/api/v1
+      MOBILITY_URL: http://mobility:4001/api/v1
+      RAG_URL: http://rag-engine:8000/api/v1
+    ports:
+      - "5000:5000"
+    depends_on:
+      - core-api
+      - mobility
+      - rag-engine
+    networks:
+      - servichaco-net
+
+  frontend:
+    build:
+      context: ./apps/frontend
+    container_name: servichaco_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - orchestrator
+    networks:
+      - servichaco-net
 
 volumes:
-  servichaco_pgdata:
-    driver: local
-  servichaco_redisdata:
-    driver: local
+  postgres_data:
 
 networks:
-  servichaco_network:
+  servichaco-net:
     driver: bridge
